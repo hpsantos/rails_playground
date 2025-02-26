@@ -1,0 +1,75 @@
+<div class="game-grid flex flex-col w-[99vw] h-[99vh]">
+    <% @game.rows.times do |row| %>
+    <div class="grid-row flex flex-1">
+        <% @game.cols.times do |col| %>
+        <div class="grid-cell border flex-1 border-orange-100 text-center content-center">
+            <div class="text-xs text-gray-400">
+                (<%= row %>, <%= col %>)
+            </div>
+        </div>
+        <% end %>
+    </div>
+    <% end %>
+</div>
+
+<style>
+    .grid-cell {
+        background-color: #f3E0D1;
+    }
+</style>
+
+<script>
+    const playerClasses = {
+        red: "bg-red-200!",
+        blue: "bg-blue-200!",
+        green: "bg-green-200!",
+    }
+    getCommand = (key) => {
+        switch (key) {
+            case "ArrowUp":
+                return "up";
+            case "ArrowDown":
+                return "down";
+            case "ArrowLeft":
+                return "left";
+            case "ArrowRight":
+                return "right";
+        }
+    }
+
+    addEventListener("keydown", (event) => {
+        const command = getCommand(event.key);
+        if (command) {
+            fetch("/rover/game", {
+                    method: 'PUT',
+                    headers: {
+                        'Content-type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        command,
+                        player: <%= @player.id.to_json %>
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    updateGridState(data.player)
+                });
+        }
+    });
+
+    updateGridState = (player) => {
+        console.log(player)
+        const gameCells = document.querySelectorAll(".grid-cell");
+        for (var i = 0; i < gameCells.length; i++) {
+          gameCells[i].classList.remove(playerClasses[player.name]);
+        }
+
+        const roverRow = document.querySelector(`.grid-row:nth-child(${player.y + 1})`);
+        console.log(roverRow);
+        const roverCell = roverRow.querySelector(`.grid-cell:nth-child(${player.x + 1})`);
+        console.log(roverCell);
+        roverCell.classList.add(playerClasses[player.name]);
+    }
+
+    updateGridState( <%= @player.to_json.html_safe %> );
+</script>

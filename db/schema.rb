@@ -11,21 +11,24 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[8.0].define(version: 2025_02_26_132930) do
-  create_table "posts", force: :cascade do |t|
-    t.string "title"
-    t.text "body"
+  create_table "games", force: :cascade do |t|
+    t.string "name", null: false
+    t.integer "rows", default: 10, null: false
+    t.integer "cols", default: 10, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "rover_game_states", force: :cascade do |t|
-    t.string "name"
-    t.integer "rows"
-    t.integer "cols"
-    t.integer "rover_x"
-    t.integer "rover_y"
-    t.integer "rover_direction"
+  create_table "players", force: :cascade do |t|
+    t.integer "game_id", null: false
+    t.string "name", null: false
+    t.integer "x", default: 0, null: false
+    t.integer "y", default: 0, null: false
+    t.integer "direction", default: 1, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["game_id"], name: "index_players_on_game_id"
   end
+
+  add_foreign_key "players", "games"
 end

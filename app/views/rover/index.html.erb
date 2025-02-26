@@ -1,70 +1,30 @@
-<div class="game-grid flex flex-col w-[99vw] h-[99vh]">
-    <% @state.rows.times do |row| %>
-    <div class="grid-row flex flex-1">
-        <% @state.cols.times do |col| %>
-        <div class="grid-cell border flex-1 border-orange-100 text-center content-center">
-            <div class="text-xs text-gray-400">
-                (<%= row %>, <%= col %>)
+<div class="flex min-h-full flex-col justify-center">
+    <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+        <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">Select your game and player</h2>
+
+        <%= form_with(url: "/rover/game", method: :get) do |form| %>
+            <div class="flex items-center justify-between mt-10">
+                <label for="game" class="block text-sm/6 font-medium text-gray-900 text-right">Game:</label>
+                <select id="game" name="game" class="block w-1/2 rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
+                    <% Game.available_games.each do |game| %>
+                        <option value="<%= game %>"><%= game %></option>
+                    <% end %>
+                </select>
             </div>
-        </div>
+
+            <div class="flex items-center justify-between mt-10">
+                <label for="player" class="block text-sm/6 font-medium text-gray-900">Player:</label>
+                <select id="player" name="player" class="block w-1/2 rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
+                    <% Player.available_players.each do |player| %>
+                        <option value="<%= player %>"><%= player %></option>
+                    <% end %>
+                </select>
+            </div>
+
+            <div class="mt-10">
+                <button type="submit" class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Enter game</button>
+            </div>
         <% end %>
+
     </div>
-    <% end %>
 </div>
-
-<style>
-    .grid-cell {
-        background-color: #f3E0D1;
-    }
-</style>
-
-<script>
-    getCommand = (key) => {
-        switch (key) {
-            case "ArrowUp":
-                return "up";
-            case "ArrowDown":
-                return "down";
-            case "ArrowLeft":
-                return "left";
-            case "ArrowRight":
-                return "right";
-        }
-    }
-
-    addEventListener("keydown", (event) => {
-        const command = getCommand(event.key);
-        if (command) {
-            fetch("/rover", {
-                    method: 'PUT',
-                    headers: {
-                        'Content-type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        command
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    updateGridState(data)
-                });
-        }
-    });
-
-    updateGridState = (state) => {
-        console.log(state)
-        const gameCells = document.querySelectorAll(".grid-cell");
-        console.log(gameCells.length)
-        for (var i = 0; i < gameCells.length; i++) {
-          gameCells[i].classList.remove("bg-red-200!");
-        }
-
-        const roverRow = document.querySelector(`.grid-row:nth-child(${state.rover_y + 1})`);
-        console.log(roverRow);
-        const roverCell = roverRow.querySelector(`.grid-cell:nth-child(${state.rover_x + 1})`);
-        console.log(roverCell);
-        roverCell.classList.add("bg-red-200!");
-    }
-
-    updateGridState( <%= @state.to_json.html_safe %> );
-</script>
