@@ -1,0 +1,13 @@
+<div class="game-grid flex flex-col w-[100vw] h-[100vh]">
+  <% @state.rows.times do |row| %>
+  <div class="flex flex-row flex-1">
+    <% @state.cols.times do |col| %>
+    <div class="border flex-1 box-border border-blue-500 text-center content-center <%= row == @state.rover_x && col == @state.rover_y ? "bg-blue-200" : "" %>">
+      <div class="text-xs text-gray-400">
+        <%= row %>,<%= col %>
+      </div>
+    </div>
+    <% end %>
+  </div>
+  <% end %>
+</div>

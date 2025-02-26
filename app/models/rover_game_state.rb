@@ -1,0 +1,2 @@
+class RoverGameState < ApplicationRecord
+end
