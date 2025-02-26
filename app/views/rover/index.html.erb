@@ -38,7 +38,6 @@
             fetch("/rover", {
                     method: 'PUT',
                     headers: {
-                        'x-csrf-token': document.querySelector('meta[name="csrf-token"]').content,
                         'Content-type': 'application/json'
                     },
                     body: JSON.stringify({
