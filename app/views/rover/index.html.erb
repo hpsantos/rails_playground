@@ -1,13 +1,71 @@
 <div class="game-grid flex flex-col w-[99vw] h-[99vh]">
-  <% @state.rows.times do |row| %>
-  <div class="flex flex-1">
-    <% @state.cols.times do |col| %>
-    <div class="border flex-1 border-orange-100 text-center content-center <%= row == @state.rover_x && col == @state.rover_y ? "bg-red-200" : " bg-orange-50" %>">
-      <div class="text-xs text-gray-400">
-        (<%= row %>, <%= col %>)
-      </div>
+    <% @state.rows.times do |row| %>
+    <div class="grid-row flex flex-1">
+        <% @state.cols.times do |col| %>
+        <div class="grid-cell border flex-1 border-orange-100 text-center content-center">
+            <div class="text-xs text-gray-400">
+                (<%= row %>, <%= col %>)
+            </div>
+        </div>
+        <% end %>
     </div>
     <% end %>
-  </div>
-  <% end %>
 </div>
+
+<style>
+    .grid-cell {
+        background-color: #f3E0D1;
+    }
+</style>
+
+<script>
+    getCommand = (key) => {
+        switch (key) {
+            case "ArrowUp":
+                return "up";
+            case "ArrowDown":
+                return "down";
+            case "ArrowLeft":
+                return "left";
+            case "ArrowRight":
+                return "right";
+        }
+    }
+
+    addEventListener("keydown", (event) => {
+        const command = getCommand(event.key);
+        if (command) {
+            fetch("/rover", {
+                    method: 'PUT',
+                    headers: {
+                        'x-csrf-token': document.querySelector('meta[name="csrf-token"]').content,
+                        'Content-type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        command
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    updateGridState(data)
+                });
+        }
+    });
+
+    updateGridState = (state) => {
+        console.log(state)
+        const gameCells = document.querySelectorAll(".grid-cell");
+        console.log(gameCells.length)
+        for (var i = 0; i < gameCells.length; i++) {
+          gameCells[i].classList.remove("bg-red-200!");
+        }
+
+        const roverRow = document.querySelector(`.grid-row:nth-child(${state.rover_y + 1})`);
+        console.log(roverRow);
+        const roverCell = roverRow.querySelector(`.grid-cell:nth-child(${state.rover_x + 1})`);
+        console.log(roverCell);
+        roverCell.classList.add("bg-red-200!");
+    }
+
+    updateGridState( <%= @state.to_json.html_safe %> );
+</script>

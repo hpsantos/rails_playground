@@ -8,4 +8,12 @@ class RoverController < ApplicationController
 
     @state = RoverGameState.create(name: "default", rows: 20, cols: 20, rover_x: 10, rover_y: 10, rover_direction: 0)
   end
+
+  def update
+    @state = RoverGameState.first
+    @state.process_command(params[:command])
+    @state.save
+
+    render json: @state
+  end
 end
