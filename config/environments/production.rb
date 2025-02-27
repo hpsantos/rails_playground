@@ -89,10 +89,5 @@ Rails.application.configure do
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
   #
 
-  hostname = "http://159.69.82.98/"
-  port = "80"
-  base_url = "#{hostname}:#{port}"
-
-  config.action_cable.url = "ws://#{hostname}/cable"
-  config.action_cable.allowed_request_origins = [ "http://#{base_url}", "http://#{hostname}" ]
+  config.action_cable.allowed_request_origins = [ "http://159.69.82.98", "http://#{hostname}" ]
 end
