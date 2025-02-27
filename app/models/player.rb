@@ -5,9 +5,10 @@ class Player < ApplicationRecord
   validates :game_id, uniqueness: { scope: %i[name] }
   validates :x, presence: true
   validates :y, presence: true
+  validates :rotation, presence: true
   after_save :broadcast_update
 
-  enum :direction, { neutral: 0, up: 1, right: 2, down: 3, left: 4 }
+  enum :direction, { up: 0, right: 1, down: 2, left: 3 }
 
   def broadcast_update
     ActionCable.server.broadcast("game_channel", {
@@ -34,11 +35,55 @@ class Player < ApplicationRecord
     destination
   end
 
+  def calculate_rotation(previous_direction, direction, rotation) # rubocop:disable Metrics/CyclomaticComplexity
+    Rails.logger.info("\n\n#####################\n")
+    Rails.logger.info("previous_direction: #{previous_direction}\ndirection: #{direction}\nrotation: #{rotation}")
+    if previous_direction == direction
+      rotation
+    else
+      case [ previous_direction, direction ]
+      when %w[up right]
+        rotation + 90
+      when %w[up left]
+        rotation - 90
+      when %w[up down]
+        rotation + 180
+      when %w[right up]
+        rotation - 90
+      when %w[right left]
+        rotation + 180
+      when %w[right down]
+        rotation + 90
+      when %w[down up]
+        rotation + 180
+      when %w[down right]
+        rotation - 90
+      when %w[down left]
+        rotation + 90
+      when %w[left up]
+        rotation + 90
+      when %w[left right]
+        rotation + 180
+      when %w[left down]
+        rotation - 90
+      end
+    end
+  end
+
   def process_command!(command)
     destination = process_command(command)
     return if game.out_of_bounds?(destination[:x], destination[:y])
 
-    update(x: destination[:x], y: destination[:y], direction: command)
+    old_direction = direction
+    new_rotation = calculate_rotation(old_direction, command, rotation)
+    Rails.logger.info("final rotation #{new_rotation}")
+
+    update(
+      x: destination[:x],
+      y: destination[:y],
+      direction: command,
+      rotation: new_rotation
+    )
   end
 
   def self.available_players

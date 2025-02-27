@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_27_143335) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_27_180255) do
   create_table "games", force: :cascade do |t|
     t.string "name", null: false
     t.integer "rows", default: 10, null: false
@@ -27,6 +27,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_27_143335) do
     t.integer "direction", default: 1, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "rotation", default: 0
     t.index ["game_id", "name"], name: "index_players_on_game_id_and_name", unique: true
     t.index ["game_id"], name: "index_players_on_game_id"
     t.index ["name"], name: "index_players_on_name", unique: true

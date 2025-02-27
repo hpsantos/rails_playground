@@ -7,15 +7,6 @@ const PLAYER_COLORS = {
   green: "#55AA55",
 };
 
-const DIRECTION_DEGREES = {
-  up: 0,
-  right: 90,
-  down: 180,
-  left: 270,
-};
-
-let previous_direction = undefined;
-
 export default class extends Controller {
   connect() {
     const players = JSON.parse(this.data.get("players"));
@@ -75,9 +66,7 @@ export default class extends Controller {
       const playerLeft = (player.x / (game.rows - 1)) * 100;
       const vehicle = this.findOrCreateVehicle(player);
 
-      vehicle.style = `top:${playerTop}%;left:${playerLeft}%;transform:rotate(${
-        DIRECTION_DEGREES[player.direction]
-      }deg);`;
+      vehicle.style = `top:${playerTop}%;left:${playerLeft}%;transform:rotate(${player.rotation}deg);`;
     }
   }
 
