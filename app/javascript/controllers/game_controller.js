@@ -78,7 +78,9 @@ export default class extends Controller {
       );
       // const playerCell = document.createElement("div");
       // playerCell.classList.add("player", PLAYER_CLASSES[player.name]);
-      roverCell.appendChild(vehicle);
+      roverCell
+        ? roverCell.appendChild(vehicle)
+        : console.error("Tried to render out of bounds player: ", player);
     }
   }
 
