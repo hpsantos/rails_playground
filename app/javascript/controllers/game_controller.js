@@ -69,9 +69,6 @@ export default class extends Controller {
   }
 
   updateGridState(game, players) {
-    // // Clean old players position
-    // this.element.querySelectorAll(".player").forEach((e) => e.remove());
-
     for (var i = 0; i < players.length; i++) {
       const player = players[i];
       const playerTop = (player.y / (game.cols - 1)) * 100;

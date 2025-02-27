@@ -9,5 +9,5 @@
   height: 50px;
   width: 50px;
   position: absolute;
-  transition: left 0.5s, top 0.5s;
+  transition: all 0.5s;
 }
