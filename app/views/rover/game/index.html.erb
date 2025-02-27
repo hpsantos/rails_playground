@@ -1,4 +1,7 @@
-<div class="game-grid flex flex-col w-[99vw] h-[99vh]">
+<div data-controller="game"
+    class="game-grid flex flex-col w-[99vw] h-[99vh]"
+    data-game-player_id="<%= @player.id %>"
+    data-game-players="<%= @game.players.to_json %>">
     <% @game.rows.times do |row| %>
     <div class="grid-row flex flex-1">
         <% @game.cols.times do |col| %>
@@ -39,60 +42,3 @@
         left: 50px;
     }
 </style>
-
-<script>
-    const playerClasses = {
-        red: "player-red",
-        blue: "player-blue",
-        green: "player-green",
-    }
-    getCommand = (key) => {
-        switch (key) {
-            case "ArrowUp":
-                return "up";
-            case "ArrowDown":
-                return "down";
-            case "ArrowLeft":
-                return "left";
-            case "ArrowRight":
-                return "right";
-        }
-    }
-
-    addEventListener("keydown", (event) => {
-        const command = getCommand(event.key);
-        if (command) {
-            fetch("/rover/game", {
-                    method: 'PUT',
-                    headers: {
-                        'Content-type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        command,
-                        player: <%= @player.id.to_json %>
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    updateGridState(data.players)
-                });
-        }
-    });
-
-    updateGridState = (players) => {
-        // Clean old players position
-        document.querySelectorAll(".player").forEach(e => e.remove());
-
-        for (var i = 0; i < players.length; i++) {
-            const player = players[i];
-            const roverRow = document.querySelector(`.grid-row:nth-child(${player.y + 1})`);
-            const roverCell = roverRow.querySelector(`.grid-cell:nth-child(${player.x + 1})`);
-            // Draw new player position
-            playerCell = document.createElement("div")
-            playerCell.classList.add("player", playerClasses[player.name]);
-            roverCell.appendChild(playerCell);
-        }
-    }
-
-    updateGridState( <%= @game.players.to_json.html_safe %> );
-</script>
