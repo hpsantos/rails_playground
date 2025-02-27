@@ -17,7 +17,7 @@ export default class extends Controller {
   }
 
   bindWebsocket() {
-    const socket = new WebSocket("ws://localhost:3000/cable");
+    const socket = new WebSocket("/cable");
     // Connection opened
     socket.addEventListener("open", (event) => {
       const msg = {
