@@ -31,7 +31,7 @@ export default class extends Controller {
     // Listen for messages
     socket.addEventListener("message", (event) => {
       const { message } = JSON.parse(event.data);
-      if (message.type === "player_update") {
+      if (message && message.type === "player_update") {
         this.updateGridState(message.players);
       }
     });
