@@ -14,15 +14,37 @@
 
 <style>
     .grid-cell {
+        position: relative;
         background-color: #f3E0D1;
+    }
+
+    .grid-cell .player {
+        background: blue;
+        height:15px;
+        width:15px;
+        position: absolute;
+        top: 20px;
+    }
+
+    .grid-cell .player-red {
+        background: red;
+        left: 80px;
+    }
+    .grid-cell .player-green {
+        background: green;
+        left: 65px;
+    }
+    .grid-cell .player-blue {
+        background: blue;
+        left: 50px;
     }
 </style>
 
 <script>
     const playerClasses = {
-        red: "bg-red-200!",
-        blue: "bg-blue-200!",
-        green: "bg-green-200!",
+        red: "player-red",
+        blue: "player-blue",
+        green: "player-green",
     }
     getCommand = (key) => {
         switch (key) {
@@ -52,24 +74,25 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    updateGridState(data.player)
+                    updateGridState(data.players)
                 });
         }
     });
 
-    updateGridState = (player) => {
-        console.log(player)
-        const gameCells = document.querySelectorAll(".grid-cell");
-        for (var i = 0; i < gameCells.length; i++) {
-          gameCells[i].classList.remove(playerClasses[player.name]);
-        }
+    updateGridState = (players) => {
+        // Clean old players position
+        document.querySelectorAll(".player").forEach(e => e.remove());
 
-        const roverRow = document.querySelector(`.grid-row:nth-child(${player.y + 1})`);
-        console.log(roverRow);
-        const roverCell = roverRow.querySelector(`.grid-cell:nth-child(${player.x + 1})`);
-        console.log(roverCell);
-        roverCell.classList.add(playerClasses[player.name]);
+        for (var i = 0; i < players.length; i++) {
+            const player = players[i];
+            const roverRow = document.querySelector(`.grid-row:nth-child(${player.y + 1})`);
+            const roverCell = roverRow.querySelector(`.grid-cell:nth-child(${player.x + 1})`);
+            // Draw new player position
+            playerCell = document.createElement("div")
+            playerCell.classList.add("player", playerClasses[player.name]);
+            roverCell.appendChild(playerCell);
+        }
     }
 
-    updateGridState( <%= @player.to_json.html_safe %> );
+    updateGridState( <%= @game.players.to_json.html_safe %> );
 </script>

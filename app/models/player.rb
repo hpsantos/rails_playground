@@ -22,4 +22,9 @@ class Player < ApplicationRecord
       self.x += 1
     end
   end
+
+  def process_command!(command)
+    process_command(command)
+    save
+  end
 end

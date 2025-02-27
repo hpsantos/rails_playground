@@ -18,12 +18,13 @@ module Rover
 
     def update
       @player = Player.find(params[:player])
-      @player.process_command(params[:command])
-      @player.save
+      @player.process_command!(params[:command])
+
+      @game = @player.game
 
       render json: {
         game: @player.game,
-        player: @player
+        players: @game.players
       }
     end
   end
