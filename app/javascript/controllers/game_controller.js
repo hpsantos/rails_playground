@@ -1,9 +1,10 @@
 import { Controller } from "@hotwired/stimulus";
+import { createVehicle } from "utils/vehicles";
 
-const PLAYER_CLASSES = {
-  red: "player-red",
-  blue: "player-blue",
-  green: "player-green",
+const PLAYER_COLORS = {
+  red: "#BB5555",
+  blue: "#5555BB",
+  green: "#55AA55",
 };
 
 export default class extends Controller {
@@ -70,9 +71,14 @@ export default class extends Controller {
         `.grid-cell:nth-child(${player.x + 1})`
       );
       // Draw new player position
-      const playerCell = document.createElement("div");
-      playerCell.classList.add("player", PLAYER_CLASSES[player.name]);
-      roverCell.appendChild(playerCell);
+      console.log(PLAYER_COLORS[player.name]);
+      const vehicle = createVehicle(
+        PLAYER_COLORS[player.name],
+        player.direction
+      );
+      // const playerCell = document.createElement("div");
+      // playerCell.classList.add("player", PLAYER_CLASSES[player.name]);
+      roverCell.appendChild(vehicle);
     }
   }
 

@@ -5,8 +5,8 @@
     <% @game.rows.times do |row| %>
     <div class="grid-row flex flex-1">
         <% @game.cols.times do |col| %>
-        <div class="grid-cell border flex-1 border-orange-100 text-center content-center">
-            <div class="text-xs text-gray-400">
+        <div class="grid-cell flex-1 text-center content-center">
+            <div class="hidden text-xs text-gray-400">
                 (<%= row %>, <%= col %>)
             </div>
         </div>
@@ -14,31 +14,3 @@
     </div>
     <% end %>
 </div>
-
-<style>
-    .grid-cell {
-        position: relative;
-        background-color: #f3E0D1;
-    }
-
-    .grid-cell .player {
-        background: blue;
-        height:15px;
-        width:15px;
-        position: absolute;
-        top: 20px;
-    }
-
-    .grid-cell .player-red {
-        background: red;
-        left: 80px;
-    }
-    .grid-cell .player-green {
-        background: green;
-        left: 65px;
-    }
-    .grid-cell .player-blue {
-        background: blue;
-        left: 50px;
-    }
-</style>

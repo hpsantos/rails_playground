@@ -7,8 +7,9 @@ class Player < ApplicationRecord
   validates :y, presence: true
   after_save :broadcast_update
 
+  enum :direction, { neutral: 0, up: 1, right: 2, down: 3, left: 4 }
+
   def broadcast_update
-    Rails.logger.info("\n\nBroadcasting update for player #{id} in game #{game_id}\n\n")
     ActionCable.server.broadcast("game_channel", {
       type: "player_update",
       game: game,
@@ -17,21 +18,29 @@ class Player < ApplicationRecord
   end
 
   def process_command(command)
+    destination = { x: x, y: y, direction: command }
+
     case command
     when "up"
-      self.y -= 1
+      destination[:y] -= 1
     when "down"
-      self.y += 1
+      destination[:y] += 1
     when "left"
-      self.x -= 1
+      destination[:x] -= 1
     when "right"
-      self.x += 1
+      destination[:x] += 1
     end
+
+    destination
   end
 
   def process_command!(command)
-    process_command(command)
-    save
+    destination = process_command(command)
+    if game.out_of_bounds?(destination[:x], destination[:y])
+      update(direction: :neutral)
+    else
+      update(x: destination[:x], y: destination[:y], direction: command)
+    end
   end
 
   def self.available_players

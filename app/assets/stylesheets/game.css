@@ -1,0 +1,38 @@
+
+.grid-cell {
+  position: relative;
+  background: url('mars-texture.jpg');
+  background-size: 100% 100%;
+}
+
+.grid-cell .player {
+  height: 50px;
+  width: 50px;
+  position: absolute;
+  top: 15px;
+  left: 50px;
+  transition: transform 0.5s;
+}
+
+.grid-cell .player.direction-right {
+  transform: rotate(90deg);
+}
+.grid-cell .player.direction-down {
+  transform: rotate(180deg);
+}
+.grid-cell .player.direction-left {
+  transform: rotate(270deg);
+}
+
+.grid-cell .player-blue {
+  background: blue;
+  left: 30px;
+}
+.grid-cell .player-green {
+  background: green;
+  left: 50px;
+}
+.grid-cell .player-red {
+  background: red;
+  left: 70px;
+}
