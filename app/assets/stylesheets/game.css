@@ -1,8 +1,10 @@
 
+.game-grid {
+  background: url('mars-texture.jpg');;
+}
+
 .grid-cell {
   position: relative;
-  background: url('mars-texture.jpg');
-  background-size: 100% 100%;
 }
 
 .grid-cell .player {
