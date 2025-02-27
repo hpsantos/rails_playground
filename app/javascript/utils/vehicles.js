@@ -60,7 +60,6 @@ export const createVehicle = (color, direction) => {
 
   const vehicle = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   vehicle.setAttribute("viewBox", "0 0 358.85 789.36");
-  vehicle.classList.add("player", "direction-" + direction);
   vehicle.innerHTML = vehicleSvg;
   return vehicle;
 };

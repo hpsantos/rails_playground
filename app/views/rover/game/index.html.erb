@@ -1,6 +1,7 @@
 <div data-controller="game"
     class="game-grid flex flex-col w-[99vw] h-[99vh]"
-    data-game-player_id="<%= @player.id %>"
+    data-game-game="<%= @player.game.to_json %>"
+    data-game-current_player_id="<%= @player.id %>"
     data-game-players="<%= @game.players.to_json %>">
     <% @game.rows.times do |row| %>
     <div class="grid-row flex flex-1">

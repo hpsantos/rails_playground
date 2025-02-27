@@ -36,11 +36,9 @@ class Player < ApplicationRecord
 
   def process_command!(command)
     destination = process_command(command)
-    if game.out_of_bounds?(destination[:x], destination[:y])
-      update(direction: :neutral)
-    else
-      update(x: destination[:x], y: destination[:y], direction: command)
-    end
+    return if game.out_of_bounds?(destination[:x], destination[:y])
+
+    update(x: destination[:x], y: destination[:y], direction: command)
   end
 
   def self.available_players

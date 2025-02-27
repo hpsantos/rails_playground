@@ -7,14 +7,24 @@ const PLAYER_COLORS = {
   green: "#55AA55",
 };
 
+const DIRECTION_DEGREES = {
+  up: 0,
+  right: 90,
+  down: 180,
+  left: 270,
+};
+
+let previous_direction = undefined;
+
 export default class extends Controller {
   connect() {
-    const playersData = JSON.parse(this.data.get("players"));
+    const players = JSON.parse(this.data.get("players"));
+    const game = JSON.parse(this.data.get("game"));
 
     this.bindKeydownEvents();
     this.bindWebsocket();
 
-    this.updateGridState(playersData);
+    this.updateGridState(game, players);
   }
 
   bindWebsocket() {
@@ -33,13 +43,13 @@ export default class extends Controller {
     socket.addEventListener("message", (event) => {
       const { message } = JSON.parse(event.data);
       if (message && message.type === "player_update") {
-        this.updateGridState(message.players);
+        this.updateGridState(message.game, message.players);
       }
     });
   }
 
   bindKeydownEvents() {
-    const playerId = this.data.get("player_id");
+    const current_player_id = this.data.get("current_player_id");
 
     addEventListener("keydown", (event) => {
       const command = this.getCommand(event.key);
@@ -51,37 +61,42 @@ export default class extends Controller {
           },
           body: JSON.stringify({
             command,
-            player: playerId,
+            player: current_player_id,
           }),
         });
       }
     });
   }
 
-  updateGridState(players) {
-    // Clean old players position
-    this.element.querySelectorAll(".player").forEach((e) => e.remove());
+  updateGridState(game, players) {
+    // // Clean old players position
+    // this.element.querySelectorAll(".player").forEach((e) => e.remove());
 
     for (var i = 0; i < players.length; i++) {
       const player = players[i];
-      const roverRow = this.element.querySelector(
-        `.grid-row:nth-child(${player.y + 1})`
-      );
-      const roverCell = roverRow.querySelector(
-        `.grid-cell:nth-child(${player.x + 1})`
-      );
-      // Draw new player position
-      console.log(PLAYER_COLORS[player.name]);
-      const vehicle = createVehicle(
-        PLAYER_COLORS[player.name],
-        player.direction
-      );
-      // const playerCell = document.createElement("div");
-      // playerCell.classList.add("player", PLAYER_CLASSES[player.name]);
-      roverCell
-        ? roverCell.appendChild(vehicle)
-        : console.error("Tried to render out of bounds player: ", player);
+      const playerTop = (player.y / (game.cols - 1)) * 100;
+      const playerLeft = (player.x / (game.rows - 1)) * 100;
+      const vehicle = this.findOrCreateVehicle(player);
+
+      vehicle.style = `top:${playerTop}%;left:${playerLeft}%;transform:rotate(${
+        DIRECTION_DEGREES[player.direction]
+      }deg);`;
     }
+  }
+
+  findOrCreateVehicle(player) {
+    const existingVehicle = this.element.querySelectorAll(
+      ".player-" + player.name
+    );
+    if (existingVehicle.length > 0) {
+      return existingVehicle[0];
+    }
+
+    const vehicle = createVehicle(PLAYER_COLORS[player.name], player.direction);
+    vehicle.classList.add("player", "player-" + player.name);
+
+    this.element.appendChild(vehicle);
+    return vehicle;
   }
 
   getCommand(key) {
