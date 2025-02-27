@@ -36,8 +36,6 @@ class Player < ApplicationRecord
   end
 
   def calculate_rotation(previous_direction, direction, rotation) # rubocop:disable Metrics/CyclomaticComplexity
-    Rails.logger.info("\n\n#####################\n")
-    Rails.logger.info("previous_direction: #{previous_direction}\ndirection: #{direction}\nrotation: #{rotation}")
     if previous_direction == direction
       rotation
     else
@@ -74,9 +72,7 @@ class Player < ApplicationRecord
     destination = process_command(command)
     return if game.out_of_bounds?(destination[:x], destination[:y])
 
-    old_direction = direction
-    new_rotation = calculate_rotation(old_direction, command, rotation)
-    Rails.logger.info("final rotation #{new_rotation}")
+    new_rotation = calculate_rotation(direction, command, rotation)
 
     update(
       x: destination[:x],
