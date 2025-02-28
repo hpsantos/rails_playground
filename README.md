@@ -1,24 +1,38 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This project is mostly meant to try out specific features from RoR 8.
+It is not production-ready code in any way, nor is the focus to have things optimised.
 
-Things you may want to cover:
+It does touch on the following topics:
 
-* Ruby version
+- ActionCable + SolidCable (with one standalone client implementation and another integrated with turbo_stream_from)
+- Kamal deployment to clean server
+- Tailwind integration on RoR
+- Stimulus for javascript feature augmentation
 
-* System dependencies
+# Running the project
 
-* Configuration
+To run the project, follow these steps:
 
-* Database creation
+1. **Install dependencies**:
 
-* Database initialization
+   ```sh
+   bundle install
+   ```
 
-* How to run the test suite
+2. **Set up the database**:
 
-* Services (job queues, cache servers, search engines, etc.)
+   ```sh
+   rails db:create
+   rails db:migrate
+   rails db:seed
+   ```
 
-* Deployment instructions
+3. **Start the Rails server**:
 
-* ...
+   ```sh
+   bin/dev
+   ```
+
+4. **Access the application**:
+   Open your browser and navigate to `http://localhost:3000`
