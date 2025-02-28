@@ -17,8 +17,8 @@
           data: { action: "game#send" } do |form| %>
         <%= form.hidden_field :player_id, value: @player.id %>
         <%= form.hidden_field :game_id, value: @game.id %>
-        <%= form.text_field :body, class: "chat-box-input-field" %>
-        <%= form.submit "Send", class: "chat-box-input-submit" %>
+        <%= form.text_field :body, class: "chat-box-input-field", tabindex: -1 %>
+        <%= form.submit "Send", class: "chat-box-input-submit", tabindex: -1 %>
     <% end %>
 </div>
 <!-- <span class="text-red-300 text-blue-300 text-green-300"></span>-->
