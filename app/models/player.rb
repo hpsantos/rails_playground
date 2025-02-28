@@ -1,4 +1,5 @@
 class Player < ApplicationRecord
+  has_many :messages, dependent: :destroy
   belongs_to :game
 
   validates :name, presence: true, uniqueness: true

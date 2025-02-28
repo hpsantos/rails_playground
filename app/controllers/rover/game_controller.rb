@@ -9,10 +9,6 @@ module Rover
       @game = Game.find_by(name: params[:game])
       @player = Player.find_or_create_by(name: params[:player], game: @game)
 
-      Rails.logger.info("######### IM HERE #########")
-      Rails.logger.info("Game: #{@game}")
-      Rails.logger.info("Player: #{@player}")
-
       redirect_back if !@game || !@player
     end
 

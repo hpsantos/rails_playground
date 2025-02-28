@@ -9,9 +9,12 @@ Rails.application.routes.draw do
   # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
-  get "rover" => "rover#index"
-  get "rover/game" => "rover/game#index"
-  put "rover/game" => "rover/game#update"
+  namespace :rover do
+    get "/" => "rover#index"
+    get "/game" => "game#index"
+    put "/game" => "game#update"
+    post "/messages" => "messages#create", as: "messages"
+  end
 
   # Defines the root path route ("/")
   # root "posts#index"

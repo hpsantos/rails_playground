@@ -1,5 +1,6 @@
 class Game < ApplicationRecord
   has_many :players, dependent: :destroy
+  has_many :messages, dependent: :destroy
 
   def self.available_games
     %w[mars moon earth]

@@ -10,13 +10,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_27_180255) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_28_110831) do
   create_table "games", force: :cascade do |t|
     t.string "name", null: false
     t.integer "rows", default: 10, null: false
     t.integer "cols", default: 10, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "messages", force: :cascade do |t|
+    t.integer "player_id"
+    t.integer "game_id"
+    t.text "body"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["game_id"], name: "index_messages_on_game_id"
+    t.index ["player_id"], name: "index_messages_on_player_id"
   end
 
   create_table "players", force: :cascade do |t|

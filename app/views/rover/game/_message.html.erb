@@ -1,0 +1,12 @@
+<div class="chat-box-message flex gap-2">
+  <div class="font-semibold text-<%= message.player.name %>-300">
+    <%= message.player.name.capitalize %>:
+  </div>
+  <div>
+    <%= message.body %>
+  </div>
+</div>
+<script>
+  messagesContainer = document.getElementById("game-messages");
+  messagesContainer.scrollTop = messagesContainer.scrollHeight;
+</script>

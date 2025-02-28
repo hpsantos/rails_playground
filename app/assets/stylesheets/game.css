@@ -4,10 +4,45 @@
   position: relative;
 }
 
-
 .player {
   height: 50px;
   width: 50px;
   position: absolute;
   transition: all 0.5s;
+}
+
+.chat-box {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 500px;
+  height: 300px;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.chat-box-messages {
+  display: block;
+  flex-grow: 1;
+  overflow-y: auto;
+  flex-direction: column;
+  overflow-anchor: auto;
+}
+
+.chat-box-form {
+  width: 100%;
+  display: flex;
+}
+.chat-box-input-field {
+  flex-grow: 1;
+  border: 1px solid white;
+}
+.chat-box-input-submit {
+  padding: 0 10px;
+  background: white;
+  color: black;
 }

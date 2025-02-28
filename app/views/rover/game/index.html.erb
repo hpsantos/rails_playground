@@ -1,6 +1,24 @@
 <div data-controller="game"
-    class="game-grid flex flex-col w-[99vw] h-[99vh]"
+    class="game-grid flex flex-col w-[100vw] h-[100vh]"
     data-game-game="<%= @player.game.to_json %>"
     data-game-current_player_id="<%= @player.id %>"
     data-game-players="<%= @game.players.to_json %>">
 </div>
+<div class="chat-box" data-controller="chat">
+    <%= turbo_stream_from @game, "messages" %>
+    <div id="game-messages" class="chat-box-messages">
+        <% @game.messages.each do |message| %>
+            <%= render partial: "rover/game/message", locals: { message: message } %>
+        <% end %>
+    </div>
+    <%= form_with model: @game.messages.new,
+          url: rover_messages_path,
+          class: "chat-box-form",
+          data: { action: "game#send" } do |form| %>
+        <%= form.hidden_field :player_id, value: @player.id %>
+        <%= form.hidden_field :game_id, value: @game.id %>
+        <%= form.text_field :body, class: "chat-box-input-field" %>
+        <%= form.submit "Send", class: "chat-box-input-submit" %>
+    <% end %>
+</div>
+<!-- <span class="text-red-300 text-blue-300 text-green-300"></span>-->
