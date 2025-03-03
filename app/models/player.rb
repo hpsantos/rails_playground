@@ -13,8 +13,9 @@ class Player < ApplicationRecord
 
   def broadcast_update
     ActionCable.server.broadcast("game_channel", {
-      type: "player_update",
+      type: "game_update",
       game: game,
+      boosters: game.boosters,
       players: game.players
     })
   end
@@ -71,16 +72,30 @@ class Player < ApplicationRecord
 
   def process_command!(command)
     destination = process_command(command)
+    new_score = score
     return if game.out_of_bounds?(destination[:x], destination[:y])
 
     new_rotation = calculate_rotation(direction, command, rotation)
 
+    boosters = game.boosters.where(x: destination[:x], y: destination[:y])
+    if boosters.exists?
+      boosters.each do |booster|
+        new_score += booster.value
+      end
+      # Calling delete to prevent triggers from executing and broadcasting duplicate messages
+      boosters.delete_all
+    end
+
     update(
       x: destination[:x],
       y: destination[:y],
+      score: new_score,
       direction: command,
       rotation: new_rotation
     )
+
+    broadcast_update_to [ game, "scores" ], target: "#player-score-#{id}", partial: "rover/game/score",
+      locals: { player: self }
   end
 
   def self.available_players

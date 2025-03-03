@@ -1,8 +1,17 @@
 <div data-controller="game"
     class="game-grid flex flex-col w-[100vw] h-[100vh]"
+    data-game-boosters="<%= @game.boosters.to_json %>"
     data-game-game="<%= @player.game.to_json %>"
     data-game-current_player_id="<%= @player.id %>"
     data-game-players="<%= @game.players.to_json %>">
+</div>
+<div id="scoreboard">
+    <%= turbo_stream_from @game, "scores" %>
+    <% @game.players.each do |player| %>
+        <%= turbo_frame_tag "#player-score-#{player.id}" do %>
+            <%= render partial: "rover/game/score", locals: { player: player } %>
+        <% end %>
+    <% end %>
 </div>
 <div class="chat-box" data-controller="chat">
     <%= turbo_stream_from @game, "messages" %>
@@ -21,4 +30,4 @@
         <%= form.submit "Send", class: "chat-box-input-submit", tabindex: -1 %>
     <% end %>
 </div>
-<!-- <span class="text-red-300 text-blue-300 text-green-300"></span>-->
+<!-- FIXME: do this properly! <span class="text-red-300 text-blue-300 text-green-300"></span>-->

@@ -4,11 +4,42 @@
   position: relative;
 }
 
+.booster {
+  position: absolute;
+  height: 20px;
+  width: 20px;
+  margin-left:15px;
+  margin-top:15px;
+  border-radius: 50%;
+}
+.booster-5 {
+  background:rgb(170, 115, 14);
+  border:3px solid rgb(110, 76, 11);
+}
+.booster-10 {
+  background:rgb(181, 180, 177);
+  border:3px solid rgb(95, 95, 95);
+}
+.booster-20 {
+  background:rgb(243, 219, 2);
+  border:3px solid rgb(208, 174, 3);
+}
+
+
 .player {
   height: 50px;
   width: 50px;
   position: absolute;
   transition: all 0.5s;
+}
+
+#scoreboard {
+  position: fixed;
+  top: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  padding: 10px;
 }
 
 .chat-box {

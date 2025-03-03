@@ -11,11 +11,12 @@ export default class extends Controller {
   connect() {
     const players = JSON.parse(this.data.get("players"));
     const game = JSON.parse(this.data.get("game"));
+    const boosters = JSON.parse(this.data.get("boosters"));
 
     this.bindKeydownEvents();
     this.bindWebsocket();
 
-    this.updateGridState(game, players);
+    this.updateGridState(game, players, boosters);
   }
 
   bindWebsocket() {
@@ -33,8 +34,11 @@ export default class extends Controller {
     // Listen for messages
     socket.addEventListener("message", (event) => {
       const { message } = JSON.parse(event.data);
-      if (message && message.type === "player_update") {
-        this.updateGridState(message.game, message.players);
+      if (message && message.type === "game_update") {
+        message.players.forEach((player) => {
+          player.name === "green" && console.log(player);
+        });
+        this.updateGridState(message.game, message.players, message.boosters);
       }
     });
   }
@@ -59,15 +63,27 @@ export default class extends Controller {
     });
   }
 
-  updateGridState(game, players) {
-    for (var i = 0; i < players.length; i++) {
-      const player = players[i];
+  updateGridState(game, players, boosters) {
+    players.forEach((player) => {
       const playerTop = (player.y / (game.cols - 1)) * 100;
       const playerLeft = (player.x / (game.rows - 1)) * 100;
       const vehicle = this.findOrCreateVehicle(player);
 
       vehicle.style = `top:${playerTop}%;left:${playerLeft}%;transform:rotate(${player.rotation}deg);`;
-    }
+    });
+
+    const existingBoosters = this.element.querySelectorAll(".booster");
+    existingBoosters.forEach((booster) => {
+      booster.remove();
+    });
+
+    boosters.forEach((booster) => {
+      const boosterTop = (booster.y / (game.cols - 1)) * 100;
+      const boosterLeft = (booster.x / (game.rows - 1)) * 100;
+      const boosterElem = this.createBooster(booster);
+
+      boosterElem.style = `top:${boosterTop}%;left:${boosterLeft}%;);`;
+    });
   }
 
   findOrCreateVehicle(player) {
@@ -83,6 +99,17 @@ export default class extends Controller {
 
     this.element.appendChild(vehicle);
     return vehicle;
+  }
+
+  createBooster(booster) {
+    const boosterElem = document.createElement("div");
+    boosterElem.classList.add(
+      "booster",
+      "booster-id-" + booster.id,
+      "booster-" + booster.value
+    );
+    this.element.appendChild(boosterElem);
+    return boosterElem;
   }
 
   getCommand(key) {

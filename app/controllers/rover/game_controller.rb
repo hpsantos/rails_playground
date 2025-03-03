@@ -6,8 +6,8 @@ module Rover
     skip_before_action :verify_authenticity_token, only: [ :update ]
 
     def index
-      @game = Game.find_by(name: params[:game])
-      @player = Player.find_or_create_by(name: params[:player], game: @game)
+      @game = Game.includes(:boosters, :players).find_by(name: params[:game])
+      @player = Player.find_by(name: params[:player], game: @game)
 
       redirect_back if !@game || !@player
     end
