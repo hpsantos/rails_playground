@@ -9,6 +9,7 @@ It does touch on the following topics:
 - Kamal deployment to clean server
 - Tailwind integration on RoR
 - Stimulus for javascript feature augmentation
+- Async job execution (using rufus-scheduler)
 
 # Running the project
 
