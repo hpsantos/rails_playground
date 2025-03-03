@@ -11,4 +11,8 @@ class Booster < ApplicationRecord
       players: game.players
     })
   end
+
+  def self.available_values
+    %w[5 10 20]
+  end
 end
